@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
+    protected $casts = [
+        'is_rare' => 'boolean',
+    ];
+
     public function scopeCheapButBig($query)
     {
         return $query->where('price', '<', 10)->where('pages_count', '>', 300);
@@ -33,6 +37,16 @@ class Book extends Model
 
     public function scopeLongAndCheaperThan($query, $amount)
     {
-        return $query->long()->where('price', '<', $amount);
+        return $query->scopeLong()->where('price', '<', $amount);
+    }
+
+    public function getPriceAttribute($value)
+    {
+        return '$ ' . $value;
+    }
+
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = strtolower($value);
     }
 }
