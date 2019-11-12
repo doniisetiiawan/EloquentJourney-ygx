@@ -100,3 +100,38 @@ Route::get('book_update', function () {
 Route::get('book_delete_1', function () {
     \App\Book::find(1)->delete();
 });
+
+Route::get('book_get_where_complex', function () {
+    $results = \App\Book::where('title', 'LIKE', '%Second%')
+        ->orWhere('pages_count', '>', 140)
+        ->get();
+    return $results;
+});
+Route::get('book_get_where_more_complex', function () {
+    $results = \App\Book::where(function ($query) {
+        $query
+            ->where('pages_count', '>', 120)
+            ->where('title', 'LIKE', '%Book%');
+    })->orWhere(function ($query) {
+        $query
+            ->where('pages_count', '<', 200)
+            ->orWhere('description', '=', '');
+    })->get();
+    return $results;
+});
+Route::get('book_get_books_count', function () {
+    $booksCount = \App\Book::count();
+    return $booksCount;
+});
+Route::get('book_get_books_min_pages_count', function () {
+    $minPagesCount = \App\Book::where('pages_count', '>', 120)->min('pages_count');
+    return $minPagesCount;
+});
+Route::get('book_get_books_max_pages_count', function () {
+    $maxPagesCount = \App\Book::where('pages_count', '>', 180)->max('pages_count');
+    return $maxPagesCount;
+});
+Route::get('book_get_books_avg_price', function () {
+    $avgPrice = \App\Book::where('title', 'LIKE', '%Book%')->avg('price');
+    return $avgPrice;
+});
