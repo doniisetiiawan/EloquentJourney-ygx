@@ -135,3 +135,7 @@ Route::get('book_get_books_avg_price', function () {
     $avgPrice = \App\Book::where('title', 'LIKE', '%Book%')->avg('price');
     return $avgPrice;
 });
+
+Route::get('books/{book}', function (App\Book $book) {
+    return $book->title;
+});
