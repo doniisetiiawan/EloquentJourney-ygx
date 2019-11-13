@@ -10,6 +10,16 @@ class Book extends Model
         'is_rare' => 'boolean',
     ];
 
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
     public function scopeCheapButBig($query)
     {
         return $query->where('price', '<', 10)->where('pages_count', '>', 300);

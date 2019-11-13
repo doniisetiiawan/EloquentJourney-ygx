@@ -139,3 +139,7 @@ Route::get('book_get_books_avg_price', function () {
 Route::get('books/{book}', function (App\Book $book) {
     return $book->title;
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
