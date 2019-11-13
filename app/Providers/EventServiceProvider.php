@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -29,6 +30,17 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        User::creating(function ($user) {
+            if (ends_with($user->email, '@deniedprovider.com')) {
+                return false;
+            }
+        });
+
+        User::created(function ($user) {
+            \Mail::send('emails.welcome', ['user' => $user],
+                function ($message) use ($user) {
+                    $message->to($user->email, $user->first_name . ' ' . $user->last_name)->subject('Welcome to My Awesome App,' . $user->first_name . '!');
+                });
+        });
     }
 }
