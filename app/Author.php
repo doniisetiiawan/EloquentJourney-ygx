@@ -10,4 +10,9 @@ class Author extends Model
     {
         return $this->hasMany(Book::class);
     }
+
+    public function categories()
+    {
+        return $this->morphToMany(Category::class, 'categorizable');
+    }
 }

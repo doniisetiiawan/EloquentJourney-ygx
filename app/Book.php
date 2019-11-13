@@ -15,10 +15,10 @@ class Book extends Model
         return $this->belongsTo(Author::class);
     }
 
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class);
-    }
+//    public function categories()
+//    {
+//        return $this->belongsToMany(Category::class);
+//    }
 
     public function scopeCheapButBig($query)
     {
@@ -80,5 +80,9 @@ class Book extends Model
     public function toJson($options = 0)
     {
         return json_encode($this->toArray(), $options);
+    }
+    public function categories()
+    {
+        return $this->morphToMany(Category::class, 'categorizable');
     }
 }
