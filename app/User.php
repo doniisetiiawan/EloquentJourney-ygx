@@ -55,4 +55,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(IdentityDocument::class);
     }
+
+    public function researches()
+    {
+        return $this->hasMany(Research::class);
+    }
+
+    public function sections()
+    {
+        return $this->hasManyThrough(Section::class, Research::class);
+    }
 }
