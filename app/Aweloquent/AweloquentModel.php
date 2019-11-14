@@ -18,6 +18,16 @@ class AweloquentModel extends Model
         parent::__construct($attributes);
     }
 
+    public function save(array $options = [])
+    {
+        if ($this->validate()) {
+            $this->smartPasswordHashing();
+            $this->purgeConfirmationFields();
+            return parent::save($options);
+        } else
+            return false;
+    }
+
     public function validate()
     {
         static::$rules = $this->mergeValidationRules();
@@ -27,6 +37,17 @@ class AweloquentModel extends Model
             return false;
         }
         return true;
+    }
+
+    private function autoHydrate(array $attributes)
+    {
+        $request     = app(Request::class);
+        $requestData = $request->except('_token');
+        foreach ($requestData as $name => $value) {
+            if (!isset($attributes[$name]))
+                $attributes[$name] = $value;
+        }
+        return $attributes;
     }
 
     private function mergeValidationRules()
@@ -51,17 +72,6 @@ class AweloquentModel extends Model
         return $finalRules;
     }
 
-    private function autoHydrate(array $attributes)
-    {
-        $request     = app(Request::class);
-        $requestData = $request->except('_token');
-        foreach ($requestData as $name => $value) {
-            if (!isset($attributes[$name]))
-                $attributes[$name] = $value;
-        }
-        return $attributes;
-    }
-
     private function smartPasswordHashing()
     {
         if ($this->attributes['password'])
@@ -71,7 +81,7 @@ class AweloquentModel extends Model
     private function purgeConfirmationFields()
     {
         foreach ($this->attributes as $name => $value) {
-            if (Str::endsWith($name, '_confirmation'))
+            if (\Str::endsWith($name, '_confirmation'))
                 unset($this->attributes[$name]);
         }
     }
