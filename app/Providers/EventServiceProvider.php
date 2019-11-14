@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Book;
+use App\Observers\BookObserver;
+use App\Observers\WelcomeUserObserver;
 use App\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -42,5 +45,8 @@ class EventServiceProvider extends ServiceProvider
                     $message->to($user->email, $user->first_name . ' ' . $user->last_name)->subject('Welcome to My Awesome App,' . $user->first_name . '!');
                 });
         });
+
+        Book::observe(new BookObserver());
+        User::observe(new WelcomeUserObserver());
     }
 }
