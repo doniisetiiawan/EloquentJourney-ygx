@@ -61,4 +61,18 @@ class AweloquentModel extends Model
         }
         return $attributes;
     }
+
+    private function smartPasswordHashing()
+    {
+        if ($this->attributes['password'])
+            $this->attributes['password'] = \Hash::make($this->attributes['password']);
+    }
+
+    private function purgeConfirmationFields()
+    {
+        foreach ($this->attributes as $name => $value) {
+            if (Str::endsWith($name, '_confirmation'))
+                unset($this->attributes[$name]);
+        }
+    }
 }
