@@ -143,3 +143,31 @@ Route::get('books/{book}', function (App\Book $book) {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+//Route::get('authors', function (\App\Repositories\Contracts\AuthorsRepository $repository) {
+//    return $repository->getAll(10, 1);
+//});
+//Route::get('authors', function () {
+//    $repository = app(\App\Repositories\Contracts\AuthorsRepository::class);
+//    return $repository->getAll(10, 1);
+//});
+Route::get('authors', function () {
+    $repository = app(\App\Repositories\FileAuthorsRepository::class);
+    return $repository->getAll(10, 1);
+});
+Route::get('create_author',
+    function (\App\Repositories\DbAuthorsRepository $repository) {
+        $repository->create([
+            'first_name' => 'Francesco',
+            'last_name'  => 'Malatesta',
+            'bio'        => 'Lorem ipsum...'
+        ]);
+    });
+Route::get('update_author',
+    function (\App\Repositories\DbAuthorsRepository $repository) {
+        $repository->update([
+            'first_name' => 'Frank',
+            'last_name'  => 'Smith',
+            'bio'        => 'Other ipsum...'
+        ], 6);
+    });
